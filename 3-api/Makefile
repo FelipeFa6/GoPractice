@@ -6,6 +6,6 @@ build:
 run: build
 	./bin/$(APPNAME)
 
-test:
-	@go test -v ./..
+clean:
+	rm -rf bin/
 
