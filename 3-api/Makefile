@@ -1,10 +1,10 @@
 APPNAME=library
 
-build:
-	go build -o bin/$(APPNAME)
+run:
+	@go run .
 
-run: build
-	./bin/$(APPNAME)
+build:
+	@go build -o bin/$(APPNAME)
 
 clean:
 	rm -rf bin/
