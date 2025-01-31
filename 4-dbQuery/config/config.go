@@ -8,7 +8,6 @@ import (
     "github.com/joho/godotenv"
 )
 
-// DatabaseConfig holds the configuration for the database connection.
 type DatabaseConfig struct {
     Host     string
     Port     int
@@ -17,15 +16,11 @@ type DatabaseConfig struct {
     DBName   string
 }
 
-// LoadConfig loads the environment variables from the .env file.
-func LoadConfig() (*DatabaseConfig, error) {
-    // Load .env file
-    err := godotenv.Load()
-    if err != nil {
+func LoadEnvConfig() (*DatabaseConfig, error) {
+    if err := godotenv.Load(); err != nil {
         return nil, fmt.Errorf("Error loading .env file")
     }
 
-    // Retrieve database configuration from environment variables
     config := &DatabaseConfig{
         Host:     os.Getenv("DB_HOST"),
         User:     os.Getenv("DB_USER"),
@@ -33,24 +28,23 @@ func LoadConfig() (*DatabaseConfig, error) {
         DBName:   os.Getenv("DB_NAME"),
     }
 
-    // Attempt to retrieve and parse DB_PORT (if it's set)
     portStr := os.Getenv("DB_PORT")
     if portStr == "" {
-        config.Port = 5432 // default port if not set
-    } else {
-        port, err := strconv.Atoi(portStr) // Convert string to int
-        if err != nil {
-            return nil, fmt.Errorf("Invalid DB_PORT value in .env: %v", err)
-        }
-        config.Port = port
+        config.Port = 5432
+        return config, nil
     }
 
+    port, err := strconv.Atoi(portStr)
+    if err != nil {
+        return nil, fmt.Errorf("invalid DB_PORT value in .env: %v", err)
+    }
+
+    config.Port = port
     return config, nil
 }
 
-// GetDBConnectionString returns the formatted database connection string.
-func GetDBConnectionString() (string, error) {
-    config, err := LoadConfig()
+func GetConnectionString() (string, error) {
+    config, err := LoadEnvConfig()
     if err != nil {
         return "", err
     }
