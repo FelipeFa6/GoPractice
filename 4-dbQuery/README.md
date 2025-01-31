@@ -1,5 +1,7 @@
 ## running
 
+add the .env credentials, in this case the .env file is uploaded for convenience purposes
+
 ```bash
 make install
 make
